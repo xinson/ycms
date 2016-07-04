@@ -1,10 +1,15 @@
 <?php
-namespace app\index\controller;
+namespace admin\index\controller;
 
-class Index
+class Index extends Base
 {
-    public function index()
-    {
-        echo 'admin';
+
+    public function index(){
+        $this->display();
     }
+
+    public function login(){
+        $this->display();
+    }
+
 }

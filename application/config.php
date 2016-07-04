@@ -111,7 +111,7 @@ return [
         // 模板引擎类型 支持 php think 支持扩展
         'type'         => 'Think',
         // 模板路径
-        'view_path'    => '',
+        'view_path'    => './view/',
         // 模板后缀
         'view_suffix'  => 'html',
         // 模板文件名分隔符
@@ -192,7 +192,11 @@ return [
         // SESSION 前缀
         'prefix'         => 'think',
         // 驱动方式 支持redis memcache memcached
-        'type'           => '',
+        'type'           => 'redis',
+        // redis主机
+        'host'       => '127.0.0.1',
+        // redis端口
+        'port'       => 6379,
         // 是否自动开启 SESSION
         'auto_start'     => true,
     ],
