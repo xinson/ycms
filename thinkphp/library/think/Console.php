@@ -21,6 +21,7 @@ use think\console\input\Argument as InputArgument;
 use think\console\input\Definition as InputDefinition;
 use think\console\input\Option as InputOption;
 use think\console\Output;
+use think\console\output\Nothing;
 use think\console\output\Stream;
 
 class Console
@@ -48,8 +49,10 @@ class Console
         "think\\console\\command\\Help",
         "think\\console\\command\\Lists",
         "think\\console\\command\\Build",
+        "think\\console\\command\\Make",
         "think\\console\\command\\make\\Controller",
         "think\\console\\command\\make\\Model",
+        "think\\console\\command\\optimize\\Autoload",
     ];
 
     public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
@@ -64,6 +67,44 @@ class Console
         foreach ($this->getDefaultCommands() as $command) {
             $this->add($command);
         }
+    }
+
+    public static function init($run = true)
+    {
+        static $console;
+        if (!$console) {
+            // 实例化console
+            $console = new self('Think Console', '0.1');
+            // 读取指令集
+            if (is_file(CONF_PATH . 'command' . EXT)) {
+                $commands = include CONF_PATH . 'command' . EXT;
+                if (is_array($commands)) {
+                    foreach ($commands as $command) {
+                        if (class_exists($command) && is_subclass_of($command, "\\think\\console\\command\\Command")) {
+                            // 注册指令
+                            $console->add(new $command());
+                        }
+                    }
+                }
+            }
+        }
+        if ($run) {
+            // 运行
+            $console->run();
+        } else {
+            return $console;
+        }
+    }
+
+    public static function call($command, array $parameters = [])
+    {
+        $console = self::init(false);
+
+        array_unshift($parameters, $command);
+
+        $input = new ConsoleInput($parameters);
+
+        $console->find($command)->run($input, new Nothing());
     }
 
     /**

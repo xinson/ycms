@@ -11,6 +11,19 @@
 
 namespace think;
 
+use think\exception\ClassNotFoundException;
+
+/**
+ * Class Log
+ * @package think
+ *
+ * @method void log($msg) static
+ * @method void error($msg) static
+ * @method void info($msg) static
+ * @method void sql($msg) static
+ * @method void notice($msg) static
+ * @method void alert($msg) static
+ */
 class Log
 {
     const LOG    = 'log';
@@ -28,38 +41,27 @@ class Log
     protected static $type = ['log', 'error', 'info', 'sql', 'notice', 'alert'];
     // 日志写入驱动
     protected static $driver;
-    // 通知发送驱动
-    protected static $alarm;
+
     // 当前日志授权key
     protected static $key;
 
     /**
      * 日志初始化
-     * @return void
+     * @param array $config
      */
     public static function init($config = [])
     {
         $type         = isset($config['type']) ? $config['type'] : 'File';
-        $class        = (!empty($config['namespace']) ? $config['namespace'] : '\\think\\log\\driver\\') . ucwords($type);
+        $class        = false !== strpos($type, '\\') ? $type : '\\think\\log\\driver\\' . ucwords($type);
         self::$config = $config;
         unset($config['type']);
-        self::$driver = new $class($config);
+        if (class_exists($class)) {
+            self::$driver = new $class($config);
+        } else {
+            throw new ClassNotFoundException('class not exists:' . $class, $class);
+        }
         // 记录初始化信息
-        APP_DEBUG && Log::record('[ LOG ] INIT ' . $type . ': ' . var_export($config, true), 'info');
-    }
-
-    /**
-     * 通知初始化
-     * @return void
-     */
-    public static function alarm($config = [])
-    {
-        $type  = isset($config['type']) ? $config['type'] : 'Email';
-        $class = (!empty($config['namespace']) ? $config['namespace'] : '\\think\\log\\alarm\\') . ucwords($type);
-        unset($config['type']);
-        self::$alarm = new $class($config['alarm']);
-        // 记录初始化信息
-        APP_DEBUG && Log::record('[ CACHE ] ALARM ' . $type . ': ' . var_export($config, true), 'info');
+        App::$debug && Log::record('[ LOG ] INIT ' . $type . ': ' . var_export($config, true), 'info');
     }
 
     /**
@@ -80,9 +82,6 @@ class Log
      */
     public static function record($msg, $type = 'log')
     {
-        if (!is_string($msg)) {
-            $msg = var_export($msg, true);
-        }
         self::$log[$type][] = $msg;
     }
 
@@ -112,7 +111,6 @@ class Log
      */
     public static function check($config)
     {
-
         if (self::$key && !empty($config['allow_key']) && !in_array(self::$key, $config['allow_key'])) {
             return false;
         }
@@ -153,9 +151,6 @@ class Log
      */
     public static function write($msg, $type = 'log')
     {
-        if (!is_string($msg)) {
-            $msg = var_export($msg, true);
-        }
         // 封装日志信息
         $log[$type][] = $msg;
 
@@ -169,18 +164,10 @@ class Log
     }
 
     /**
-     * 发送预警通知
-     * @param mixed $msg 调试信息
-     * @return void
-     */
-    public static function send($msg)
-    {
-        self::$alarm && self::$alarm->send($msg);
-    }
-
-    /**
      * 静态调用
-     * @return void
+     * @param $method
+     * @param $args
+     * @return mixed
      */
     public static function __callStatic($method, $args)
     {
