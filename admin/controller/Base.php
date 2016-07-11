@@ -1,26 +1,31 @@
 <?php
-namespace admin\index\controller;
+namespace admin\controller;
 
 use think\Db;
 use think\Session;
+use think\Controller;
 
-class Base extends \think\Controller
+class Base extends Controller
 {
+
+    protected $beforeActionList = [
+        'checkUser' => ['except' => 'login,loginaction'],
+    ];
+
     public function _initialize()
     {
-        //$this->checkUser();
         $basic = $this->getConfig('basic');
-        $this->assign('basic',$basic);
+        $this->assign('basic', $basic);
     }
 
-    public function checkUser()
+    protected function checkUser()
     {
         if (!session::has('adminid') and !session::has('adminname')) {
             $this->redirect('login');
         }
     }
 
-    public function getConfig()
+    private function getConfig()
     {
         $config = Db::table('ycms_config')->where('1')->select();
         return $config;

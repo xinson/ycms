@@ -14,5 +14,7 @@ namespace think;
 // ThinkPHP 引导文件
 // 加载基础文件
 require __DIR__ . '/base.php';
+// 绑定当前访问到index模块
+Route::bind('index');
 // 执行应用
 App::run()->send();

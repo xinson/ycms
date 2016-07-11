@@ -23,7 +23,7 @@ return [
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
-    'app_multi_module'       => true,
+    'app_multi_module'       => false,
     // 注册的根命名空间
     'root_namespace'         => [],
     // 扩展配置文件
@@ -81,7 +81,7 @@ return [
     // pathinfo分隔符
     'pathinfo_depr'          => '/',
     // URL伪静态后缀
-    'url_html_suffix'        => 'html',
+    'url_html_suffix'        => '',
     // URL普通方式参数 用于自动生成
     'url_common_param'       => false,
     //url禁止访问的后缀
@@ -111,11 +111,11 @@ return [
         // 模板引擎类型 支持 php think 支持扩展
         'type'         => 'Think',
         // 模板路径
-        'view_path'    => './view/',
+        'view_path'    => '../admin/view/',
         // 模板后缀
         'view_suffix'  => 'html',
         // 模板文件名分隔符
-        'view_depr'    => DS,
+        'view_depr'    => '/',
         // 模板引擎普通标签开始标记
         'tpl_begin'    => '{',
         // 模板引擎普通标签结束标记
