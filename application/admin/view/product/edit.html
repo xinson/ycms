@@ -1,0 +1,40 @@
+{layout name="layout" /}
+
+<script type="text/javascript" src="__STATIC_admin/js/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
+<link href="__STATIC_admin/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<script type="text/javascript" src="__STATIC_admin/datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="__STATIC_admin/datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+
+<div id="page-wrapper" >
+    <div class="col-lg-12">
+        <p></p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                编辑授权
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form role="form" name="form" method="post" action="{:url('product/productsave')}">
+                            <input type="hidden" name="id" value="{$data['infoid']|default=''}" />
+                            <div class="form-group">
+                                <label>链接</label>
+                                <input  type="text" value="{$data['title']|default=''}" name="title" id="title" class="form-control">
+                            </div>
+
+                            <script type="text/javascript">
+                                $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
+                            </script>
+                            <button type="submit" class="btn btn-default">提交</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </form>
+                    </div>
+
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>

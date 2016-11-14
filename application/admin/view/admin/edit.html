@@ -1,0 +1,67 @@
+{layout name="layout" /}
+
+<div id="page-wrapper" >
+    <div class="col-lg-12">
+        <p></p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                编辑管理员
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form role="form" name="form" method="post" action="{:url('admin/adminsave')}">
+                            {if condition="$type eq 'add'"}
+                            <input type="hidden" name="action" value="saveadd" />
+                            {else}
+                            <input type="hidden" name="id" value="{$data['adminid']}" />
+                            <input type="hidden" name="action" value="saveedit" />
+                            {/if}
+                            <div class="form-group">
+                                <label>登录帐号</label>
+                                <input {if condition="$type neq 'add'"}disabled{/if} type="text" value="{$data['adminname']|default=''}" name="adminname" id="adminname" class="form-control">
+                                <p class="help-block">4-16个字符，只能由中文、字母、数字和下横线组成</p>
+                            </div>
+                            <div class="form-group">
+                                <label>登录密码</label>
+                                <input name="password" id="password" class="form-control" placeholder="输入密码">
+                            </div>
+                            <div class="form-group">
+                                <label>备注说明</label>
+                                <textarea name='memo' id='memo' class="form-control" rows="3">{$data['memo']|default=''}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>帐号设置</label>
+                                <label class="radio-inline">
+                                    <input type="radio" id="flag" name="flag"
+                                           value="1" {php}if( !empty($data['flag']) ) echo  'checked="checked"';{/php}>审核
+                                </label>
+                                {if condition="$adminname eq 'admin'"}
+                                <label class="radio-inline">
+                                    <input type="radio" id="super" name="super"
+                                           value="1" {php}if( !empty($data['super']) ) echo  'checked="checked"';{/php}>超级管理员
+                                </label>
+                                {/if}
+                            </div>
+                            <div class="form-group">
+                                <label>帐号权限</label>
+                                <select name="groupid" id="groupid" class="form-control">
+                                    <option value="">==请选择==</option>
+                                    {volist name="list" id="vo" key="k" }
+                                    <option value="{$vo['groupid']}" {if condition="$vo['groupid'] eq $data['groupid']"}>selected='selected'{/if}>{$vo->groupname}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-default">提交</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </form>
+                    </div>
+
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
